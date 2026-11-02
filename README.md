@@ -19,6 +19,10 @@ A developer drops in a screenshot of an existing app or design, describes the tr
 
 Nothing in the demo path is mocked. If the simulator or capture is unavailable, the UI says so instead of showing a fake preview.
 
+## Demo
+
+**[Watch the 3-minute demo (demo/UI-Evolution-Engine-demo.mp4)](demo/UI-Evolution-Engine-demo.mp4)**: one real run of this app, with real Meta model calls and real Xcode builds, nothing staged or mocked. Long waits are shown as a labeled time-lapse, and interaction scenes play slightly faster (1.25×).
+
 > **Running it yourself:** this is a local tool for a **Mac with Xcode**, and it needs **your own Meta Model API key** (no key is included in this repository). Clone, `npm install`, `cp .env.example .env.local`, put your key in `MODEL_API_KEY`, `npm run dev`, open <http://localhost:3000>. The first-run checklist in the app tells you what is missing. Details in [Requirements](#requirements) and [Setup](#setup).
 
 ---

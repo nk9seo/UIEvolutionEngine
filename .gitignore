@@ -43,3 +43,7 @@ next-env.d.ts
 
 # UI Evolution Engine local workspace (generated projects, screenshots, builds)
 /data/
+
+
+# local copies of the demo video
+/demo/*.zip

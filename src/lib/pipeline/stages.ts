@@ -170,9 +170,12 @@ export async function repairCode(
 }
 
 export async function critiqueRender(
-  input: { reference: Buffer; rendered: Buffer; spec: DesignSpec; prompt: string; platform: Platform; target: string },
+  input: { reference: Buffer; rendered: Buffer; spec: DesignSpec; prompt: string; instructions: string[]; platform: Platform; target: string },
   opts: StageOpts,
 ): Promise<StageResult<Critique>> {
+  const later = input.instructions.length
+    ? `\nLater instructions from the developer, oldest first (requirements; they override the request and the specification):\n${input.instructions.map((s, i) => `${i + 1}. ${s}`).join("\n")}`
+    : "";
   return createStructuredResponse(
     {
       model: MODELS.spark,
@@ -183,7 +186,7 @@ export async function critiqueRender(
       input: userMessage([
         {
           type: "input_text",
-          text: `User's transformation request: ${input.prompt}\nTarget: ${input.platform} (${input.target}).\nDesign specification:\n${JSON.stringify(input.spec)}\n\nImage 1: original reference. Image 2: rendered native SwiftUI build.`,
+          text: `User's transformation request: ${input.prompt}${later}\nTarget: ${input.platform} (${input.target}).\nDesign specification:\n${JSON.stringify(input.spec)}\n\nImage 1: original reference. Image 2: rendered native SwiftUI build.`,
         },
         { type: "input_image", image_url: imageDataUrl(input.reference) },
         { type: "input_image", image_url: imageDataUrl(input.rendered) },

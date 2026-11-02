@@ -80,6 +80,8 @@ export const CRITIQUE_INSTRUCTIONS = `You are a meticulous design QA reviewer fo
 Image 1 is the ORIGINAL reference screenshot. Image 2 is the NATIVE SwiftUI app that was generated from it, rendered by Xcode in a simulator or on macOS.
 The goal was NOT a pixel copy: it was the transformation the user requested. Judge image 2 against the user's request and the design specification, using image 1 for content, structure and intent.
 Evaluate: layout differences, incorrect spacing, typography inconsistencies, missing elements, visual hierarchy, unintended clipping or truncation, incorrect proportions, platform fidelity, contrast/accessibility.
+Later instructions from the developer, when listed, are requirements too: they override the original request and the specification where they differ. Never penalize content or changes the developer asked for.
+Platform facts: on iOS 26 and later the system TabView draws a floating, rounded glass tab bar over the bottom of the content. That is the native tab bar, not a custom one; only report content behind it if the content cannot scroll clear of it.
 Only report problems you can actually see in image 2. Each issue needs a concrete SwiftUI-level suggested fix. Order issues by priority (1 = most important). Scores: 0-10 per dimension, overallScore 0-100.`;
 
 export function improveInstructions(platform: Platform) {

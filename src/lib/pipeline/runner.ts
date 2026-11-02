@@ -497,6 +497,18 @@ async function buildPreviewCritique(
 }
 
 /** Launches a built app (simulator or Mac), captures it, and asks Muse Spark to compare it with the reference. */
+/** Developer instructions along this version's ancestry, oldest first, so the review treats them as requirements. */
+function lineageInstructions(project: Project, versionNumber: number): string[] {
+  const out: string[] = [];
+  let v = project.versions.find((x) => x.number === versionNumber);
+  for (let depth = 0; v && depth < 50; depth++) {
+    if (v.instruction?.trim()) out.unshift(v.instruction.trim());
+    const parent = v.parent;
+    v = parent == null ? undefined : project.versions.find((x) => x.number === parent);
+  }
+  return out;
+}
+
 async function previewAndCritique(ctx: JobContext, project: Project, spec: DesignSpec, appPath: string, referencePng: Buffer) {
   const platform: Platform = project.platform;
   // Preview on a real simulator (iOS) or as a real macOS app.
@@ -529,7 +541,7 @@ async function previewAndCritique(ctx: JobContext, project: Project, spec: Desig
   await ctx.step("critique", async () => {
     const rendered = await toModelPng(await fs.readFile(preview.image!));
     const { value, result } = await critiqueRender(
-      { reference: referencePng, rendered, spec, prompt: project.prompt, platform, target: preview.target ?? platform },
+      { reference: referencePng, rendered, spec, prompt: project.prompt, instructions: lineageInstructions(project, ctx.versionNumber), platform, target: preview.target ?? platform },
       { signal: ctx.signal, onProgress: ctx.progress("critique") },
     );
     await ctx.recordCall("critique", result);
